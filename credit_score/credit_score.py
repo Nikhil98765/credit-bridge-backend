@@ -9,11 +9,12 @@ router = APIRouter(
 
 # API endpoint
 @router.get("")
-def get_dummy_json(name: str, ssn: int, email: str, phoneNumber: int):
+def get_dummy_json(name: str, ssn: int, email: str, phoneNumber: int, loanAmount: float):
     USER_INFO["email"] = email
     USER_INFO["phoneNumber"] = phoneNumber
     USER_INFO["name"] = name
     USER_INFO["ssn"] = ssn
+    USER_INFO["loanAmount"] = loanAmount
 
     if ssn is 1:
         return {

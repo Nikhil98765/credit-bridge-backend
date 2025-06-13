@@ -3,4 +3,5 @@ USER_INFO = {
     "ssn": '',
     "email": '',
     "phoneNumber": '',
+    "loanAmount": '',
 }

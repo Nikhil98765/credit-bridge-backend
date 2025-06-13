@@ -13,7 +13,6 @@ router = APIRouter(
 
 @router.post("")
 async def evaluate_loan(
-        loan_amount: float = Query(..., description="Requested loan amount"),
         bank_statements: Optional[UploadFile] = File(None),
         rent_bill: Optional[UploadFile] = File(None),
         insurance_installments: Optional[UploadFile] = File(None),
@@ -24,14 +23,16 @@ async def evaluate_loan(
         1 for f in [bank_statements, rent_bill, insurance_installments, seasonal_income, investments] if f
     )
 
-    credit_score = random.randint(30, 85)
+    credit_score = random.randint(70, 95)
     fraud_score = round(random.uniform(0.1, 0.9), 2)
     max_score = 100
 
     score_label = (
-        "Poor" if credit_score < 50 else
-        "Fair" if credit_score < 70 else
-        "Good"
+        "Excellent" if credit_score >= 90 else
+        "Very Good" if credit_score >= 80 else
+        "Good" if credit_score >= 70 else
+        "Fair" if credit_score >= 60 else
+        "Poor"
     )
 
     risk_level = (
@@ -44,7 +45,7 @@ async def evaluate_loan(
         {
             "id": f"loan-option-{i}",
             "type": "Personal Loan" if i % 2 == 0 else "Secured Loan",
-            "amount": loan_amount,
+            "amount": USER_INFO["loanAmount"],
             "apr": round(random.uniform(10.0, 20.0), 2),
             "term": random.choice([12, 24, 36]),
             "monthlyPayment": random.randint(300, 700),
