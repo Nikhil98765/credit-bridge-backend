@@ -4,6 +4,8 @@ import random
 
 from fastapi.responses import JSONResponse
 
+from constants import USER_INFO
+
 router = APIRouter(
     prefix="/evaluate-loan",
     tags=["evaluate loan"]
@@ -11,7 +13,6 @@ router = APIRouter(
 
 @router.post("")
 async def evaluate_loan(
-        ssn: str = Query(..., description="Social Security Number"),
         loan_amount: float = Query(..., description="Requested loan amount"),
         bank_statements: Optional[UploadFile] = File(None),
         rent_bill: Optional[UploadFile] = File(None),
@@ -43,7 +44,7 @@ async def evaluate_loan(
         {
             "id": f"loan-option-{i}",
             "type": "Personal Loan" if i % 2 == 0 else "Secured Loan",
-            "amount": random.randint(8000, 20000),
+            "amount": loan_amount,
             "apr": round(random.uniform(10.0, 20.0), 2),
             "term": random.choice([12, 24, 36]),
             "monthlyPayment": random.randint(300, 700),
@@ -90,12 +91,13 @@ async def evaluate_loan(
         },
     ]
 
+    print(USER_INFO)
     return JSONResponse(content={
         "userDetails": {
-            "name": "John Doe",
-            "phoneNumber": 123456789,
-            "emailId": "johndoe@gmail.com",
-            "identifier": ssn
+            "name": USER_INFO["name"],
+            "phoneNumber": USER_INFO["phoneNumber"],
+            "email": USER_INFO["email"],
+            "ssn": USER_INFO["ssn"],
         },
         "creditScore": {
             "score": credit_score,
